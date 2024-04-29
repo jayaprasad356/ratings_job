@@ -283,7 +283,7 @@ if ($_SESSION['role'] == 'admin') {
                 </li>
                 <li class="treeview">
                     <a href="products.php">
-                    <i class="fas fa-cart"></i>
+                    <i class="fas fa-shopping-cart"></i>
                         <span>Products</span>
                     </a>
                 </li>
