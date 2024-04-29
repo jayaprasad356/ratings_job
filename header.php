@@ -281,6 +281,12 @@ if ($_SESSION['role'] == 'admin') {
                         <span>Slots</span>
                     </a>
                 </li>
+                <li class="treeview">
+                    <a href="products.php">
+                    <i class="fas fa-cart"></i>
+                        <span>Products</span>
+                    </a>
+                </li>
                 <?php } ?>
             </section>
             <!-- /.sidebar -->
