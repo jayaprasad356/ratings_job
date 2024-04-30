@@ -46,6 +46,7 @@ if (empty($_POST['slot_id'])) {
 $user_id = $db->escapeString($_POST['user_id']);
 $plan_id = $db->escapeString($_POST['plan_id']);
 $markets_id = $db->escapeString($_POST['markets_id']);
+$slot_id = $db->escapeString($_POST['slot_id']);
 
 
 $sql = "SELECT * FROM settings WHERE id=1";
@@ -72,6 +73,7 @@ if (empty($markets)) {
     print_r(json_encode($response));
     return false;
 }
+
 $sql = "SELECT * FROM slots WHERE id = $slot_id ";
 $db->sql($sql);
 $slots = $db->getResult();
