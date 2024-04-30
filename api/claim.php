@@ -29,12 +29,7 @@ if (empty($_POST['plan_id'])) {
     echo json_encode($response);
     return;
 }
-if (empty($_POST['markets_id'])) {
-    $response['success'] = false;
-    $response['message'] = "Markets Id is Empty";
-    echo json_encode($response);
-    return;
-}
+
 if (empty($_POST['slot_id'])) {
     $response['success'] = false;
     $response['message'] = "Slot Id is Empty";
@@ -45,9 +40,6 @@ if (empty($_POST['slot_id'])) {
 
 $user_id = $db->escapeString($_POST['user_id']);
 $plan_id = $db->escapeString($_POST['plan_id']);
-$markets_id = $db->escapeString($_POST['markets_id']);
-$slot_id = $db->escapeString($_POST['slot_id']);
-
 
 $sql = "SELECT * FROM settings WHERE id=1";
 $db->sql($sql);
@@ -63,16 +55,6 @@ if ($income_status == 0) {
 }
 
 
-$sql = "SELECT * FROM markets WHERE id = $markets_id ";
-$db->sql($sql);
-$markets = $db->getResult();
-
-if (empty($markets)) {
-    $response['success'] = false;
-    $response['message'] = "Markets not found";
-    print_r(json_encode($response));
-    return false;
-}
 
 $sql = "SELECT * FROM slots WHERE id = $slot_id ";
 $db->sql($sql);
@@ -100,7 +82,7 @@ $dayOfWeek = date('w');
 
 if ($dayOfWeek == 0 || $dayOfWeek == 7) {
     $response['success'] = false;
-    $response['message'] = "Market Open time From Monday to Saturday";
+    $response['message'] = "Working time From Monday to Saturday";
     print_r(json_encode($response));
     return false;
 } 
@@ -111,12 +93,7 @@ $d_referred_by = $user[0]['d_referred_by'];
 $valid_team = $user[0]['valid_team'];
 $valid = $user[0]['valid'];
 
-if($valid == 1 && $plan_id == 1){
-    $response['success'] = false;
-    $response['message'] = "Due to heavy demand for the free plan, we are unable to provide it to valid users.";
-    echo json_encode($response);
-    return;
-}
+
 $sql = "SELECT * FROM user_plan WHERE user_id = $user_id AND plan_id = $plan_id ORDER BY claim DESC LIMIT 1";
 $db->sql($sql);
 $user_plan = $db->getResult();
@@ -132,41 +109,14 @@ $income = $user_plan[0]['income'];
 
 if ($claim == 0) {
     $response['success'] = false;
-    $response['message'] = "You already claimed this plan";
+    $response['message'] = "You already worked this plan";
     print_r(json_encode($response));
     return false;
 }
 
-$sql = "SELECT price,min_valid_team FROM markets WHERE id = $markets_id";
-$db->sql($sql);
-$markets = $db->getResult();
 
-if (empty($markets)) {
-    $response['success'] = false;
-    $response['message'] = "Markets not found";
-    echo json_encode($response);
-    return;
-}
 
-$min_valid_team = $markets[0]['min_valid_team'];
 
-if($min_valid_team > $valid_team){
-    $response['success'] = false;
-    $response['message'] = "Minimum ".$min_valid_team." Valid Team Required";
-    echo json_encode($response);
-    return;
-
-}
-$sql = "SELECT total_income FROM slots WHERE id = $slot_id";
-$db->sql($sql);
-$slots = $db->getResult();
-
-if (empty($slots)) {
-    $response['success'] = false;
-    $response['message'] = "slots not found";
-    echo json_encode($response);
-    return;
-}
 $daily_income = $slots[0]['total_income'];
 
 $sql = "UPDATE user_plan SET claim = 0,income = income + $daily_income WHERE id = $user_plan_id";
