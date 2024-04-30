@@ -157,7 +157,7 @@ if($min_valid_team > $valid_team){
 }
 $sql = "SELECT total_income FROM slots WHERE id = $slot_id";
 $db->sql($sql);
-$markets = $db->getResult();
+$slots = $db->getResult();
 
 if (empty($slots)) {
     $response['success'] = false;
