@@ -11,9 +11,18 @@ if (isset($_POST['btnUpdate'])) {
         $link = $db->escapeString(($_POST['link']));
         $version = $db->escapeString($_POST['version']);
         $description = $db->escapeString($_POST['description']);
+       
+        if (!empty($_FILES['file_upload']['name'])) {
+            $file_name = $_FILES['file_upload']['name'];
+            $file_tmp_name = $_FILES['file_upload']['tmp_name'];
+            // Move the uploaded file to the desired location
+            $upload_directory = 'upload/files/';
+            $file_path = $upload_directory . $file_name;
+            move_uploaded_file($file_tmp_name, $file_path);
+        }
         
        if (!empty($link) && !empty($version) && !empty($description)) {
-            $sql_query = "UPDATE `app_settings` SET `link` = '$link',`version` = '$version',`description` = '$description' WHERE `app_settings`.`id` = 1;";
+            $sql_query = "UPDATE `app_settings` SET `link` = '$link',`version` = '$version',`description` = '$description', `file_upload`= '$file_path'  WHERE `app_settings`.`id` = 1;";
             $db->sql($sql_query);
             $result = $db->getResult();
             if (!empty($result)) {
@@ -83,7 +92,16 @@ $res = $db->getResult();
                                     </div>
                                  </div>
                             </div>
-
+                            <br>
+                            <div class="row">
+                                <div class="form-group">
+                                    <div class="col-md-10">
+                                        <label for="exampleInputFile">File Upload</label>
+                                        <input type="file" id="exampleInputFile" name="file_upload">
+                                        <p class="help-block">Upload your file here.</p>
+                                    </div>
+                                </div>
+                           </div>
          
                     </div>
                   
