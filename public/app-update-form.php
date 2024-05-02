@@ -8,42 +8,47 @@ $fn = new custom_functions;
 <?php
 if (isset($_POST['btnUpdate'])) {
 
-        $link = $db->escapeString(($_POST['link']));
-        $version = $db->escapeString($_POST['version']);
-        $description = $db->escapeString($_POST['description']);
-       
-        if (!empty($_FILES['file_upload']['name'])) {
-            $file_name = $_FILES['file_upload']['name'];
-            $file_tmp_name = $_FILES['file_upload']['tmp_name'];
-            // Move the uploaded file to the desired location
-            $upload_directory = 'upload/files/';
-            $file_path = $upload_directory . $file_name;
-            move_uploaded_file($file_tmp_name, $file_path);
-        }
-        
-       if (!empty($link) && !empty($version) && !empty($description)) {
-            $sql_query = "UPDATE `app_settings` SET `link` = '$link',`version` = '$version',`description` = '$description', `file_upload`= '$file_path'  WHERE `app_settings`.`id` = 1;";
-            $db->sql($sql_query);
-            $result = $db->getResult();
-            if (!empty($result)) {
-                $result = 0;
-            } else {
-                $result = 1;
-            }
+    $link = $db->escapeString($_POST['link']);
+    $version = $db->escapeString($_POST['version']);
+    $description = $db->escapeString($_POST['description']);
+    $refer_link = $db->escapeString($_POST['refer_link']);
 
-            if ($result == 1) {
-                
-                $error['update_app_settings'] = "<section class='content-header'>
-                                                <span class='label label-success'>Updated Successfully</span> </section>";
-            } else {
-                $error['update_app_settings'] = " <span class='label label-danger'>Failed</span>";
-            }
+    if (!empty($_FILES['file_upload']['name'])) {
+        $file_name = $_FILES['file_upload']['name'];
+        $file_tmp_name = $_FILES['file_upload']['tmp_name'];
+
+        $upload_directory = 'upload/files/';
+        $file_path = $upload_directory . $file_name;
+        move_uploaded_file($file_tmp_name, $file_path);
+        
+        $file_path_sql = ", `file_upload` = '$file_path'";
+    } else {
+        $file_path_sql = "";
+    }
+
+    if (!empty($link) && !empty($version) && !empty($description) && !empty($refer_link)) {
+        $sql_query = "UPDATE `app_settings` SET `link` = '$link',`version` = '$version',`description` = '$description', `refer_link` = '$refer_link' $file_path_sql WHERE `app_settings`.`id` = 1;";
+        $db->sql($sql_query);
+        $result = $db->getResult();
+        if (!empty($result)) {
+            $result = 0;
+        } else {
+            $result = 1;
         }
+
+        if ($result == 1) {
+            $error['update_app_settings'] = "<section class='content-header'>
+                                                <span class='label label-success'>Updated Successfully</span> </section>";
+        } else {
+            $error['update_app_settings'] = " <span class='label label-danger'>Failed</span>";
+        }
+    }
 }
 $sql_query = "SELECT * FROM app_settings ";
 $db->sql($sql_query);
 $res = $db->getResult();
 ?>
+
 <section class="content-header">
     <h1>App Update</h1>
 
@@ -96,12 +101,25 @@ $res = $db->getResult();
                             <div class="row">
                                 <div class="form-group">
                                     <div class="col-md-10">
-                                        <label for="exampleInputFile">File Upload</label>
-                                        <input type="file" id="exampleInputFile" name="file_upload">
-                                        <p class="help-block">Upload your file here.</p>
+                                            <label for="exampleInputEmail1">Refer Link</label> <i class="text-danger asterik">*</i><?php echo isset($error['refer_link']) ? $error['refer_link'] : ''; ?>
+                                            <input type="text" class="form-control" name="refer_link" value="<?php echo $res[0]['refer_link']?>" required>
                                     </div>
                                 </div>
-                           </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="form-group">
+                                    <div class="col-md-10">
+                                        <label for="exampleInputFile">File Upload</label><?php echo isset($error['file_upload']) ? $error['file_upload'] : ''; ?>
+                                        <input type="file" id="exampleInputFile" name="file_upload">
+                                        <p class="help-block">Upload your file here.</p>
+                                        <?php if (!empty($res[0]['file_upload'])): ?>
+                                            <p>Uploaded File: <a href="<?php echo $res[0]['file_upload']; ?>"><?php echo basename($res[0]['file_upload']); ?></a></p>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                            </div>
+
          
                     </div>
                   
