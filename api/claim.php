@@ -40,6 +40,7 @@ if (empty($_POST['slot_id'])) {
 
 $user_id = $db->escapeString($_POST['user_id']);
 $plan_id = $db->escapeString($_POST['plan_id']);
+$slot_id = $db->escapeString($_POST['slot_id']);
 
 $sql = "SELECT * FROM settings WHERE id=1";
 $db->sql($sql);
@@ -116,7 +117,6 @@ if ($claim == 0) {
 
 
 
-
 $daily_income = $slots[0]['total_income'];
 
 $sql = "UPDATE user_plan SET claim = 0,income = income + $daily_income WHERE id = $user_plan_id";
@@ -145,7 +145,7 @@ if ($num == 1){
 }
 
 $sql = "SELECT id FROM users WHERE refer_code = '$c_referred_by'";
-$db->sql($sql);
+$db->sql($sql); 
 $res= $db->getResult();
 $num = $db->numRows($res);
 

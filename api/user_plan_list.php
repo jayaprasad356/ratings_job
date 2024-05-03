@@ -21,7 +21,7 @@ if (empty($_POST['user_id'])) {
 
 $user_id = $db->escapeString($_POST['user_id']);
 
-$sql = "SELECT valid FROM users WHERE id = $user_id ";
+/*$sql = "SELECT valid FROM users WHERE id = $user_id ";
 $db->sql($sql);
 $user = $db->getResult();
 
@@ -36,12 +36,12 @@ $join = "";
 if($valid == 1){
     $join = "AND user_plan.plan_id != 1";
 
-}
+}*/
 
 $sql = "SELECT user_plan.* ,plan.image,plan.products,plan.invite_bonus,plan.price,plan.from_daily_income,plan.to_daily_income,plan.unit,plan.num_times,plan.stock
         FROM user_plan 
         LEFT JOIN plan ON user_plan.plan_id = plan.id
-        WHERE user_plan.user_id = '$user_id' ".$join;
+        WHERE user_plan.user_id = '$user_id' ";
 
 $db->sql($sql);
 $res = $db->getResult();
