@@ -1201,9 +1201,9 @@ if (isset($_GET['table']) && $_GET['table'] == 'products') {
     $sort = 'id';
     $order = 'DESC';
 
-    if (isset($_GET['category']) && $_GET['category'] != '') {
-        $category = $db->escapeString($fn->xss_clean($_GET['category']));
-        $where .= " AND category = '$category' "; // Notice the space before "AND"
+    if (isset($_GET['products']) && $_GET['products'] != '') {
+        $products = $db->escapeString($fn->xss_clean($_GET['products']));
+        $where .= " AND p.products = '$products'";
     }
 
     if (isset($_GET['offset']))
@@ -1225,14 +1225,18 @@ if (isset($_GET['table']) && $_GET['table'] == 'products') {
     if (isset($_GET['order'])){
         $order = $db->escapeString($_GET['order']);
     }
-    $sql = "SELECT COUNT(`id`) as total FROM `products`WHERE 1=1 " . $where;
+   
+    $join = "LEFT JOIN `plan` p ON l.plan_id = p.id WHERE l.id IS NOT NULL " . $where;
+
+    $sql = "SELECT COUNT(l.id) AS total FROM `products` l " . $join;
     $db->sql($sql);
     $res = $db->getResult();
-    foreach ($res as $row)
-     $total = $row['total'];
-   
-     $sql = "SELECT * FROM products WHERE 1=1 " . $where . " ORDER BY " . $sort . " " . $order . " LIMIT " . $offset . ", " . $limit;
-     $db->sql($sql);
+    foreach ($res as $row) {
+        $total = $row['total'];
+    }
+
+    $sql = "SELECT l.id AS id, l.*,p.products AS plan_products FROM `products` l " . $join . " ORDER BY $sort $order LIMIT $offset, $limit";
+    $db->sql($sql);
     $res = $db->getResult();
 
     $bulkData = array();
@@ -1251,7 +1255,7 @@ if (isset($_GET['table']) && $_GET['table'] == 'products') {
         $imagePath = $row['image'];
         $tempRow['image'] = '<a href="' . $imagePath . '" data-lightbox="category"><img src="' . $imagePath . '" alt="Image" width="70" height="70"></a>';
         $tempRow['review'] = $row['review'];
-        $tempRow['category'] = $row['category']; 
+        $tempRow['plan_products'] = $row['plan_products']; 
         $tempRow['operate'] = $operate;
         $rows[] = $tempRow;
     }

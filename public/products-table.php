@@ -13,13 +13,18 @@
                 <div class="box-header">
                 <div class="row">
                    <div class="col-md-3">
-                            <h4 class="box-title">Filter by Category</h4>
-                            <select id="category" name="category" class="form-control">
-                            <option value="">All</option>
-                                <option value="products">products</option>
-                                <option value="companies">companies</option>
-                                <option value="sarees">sarees</option>
-                            </select>
+                            <h4 class="box-title">Filter by Plan</h4>
+                            <select id='products' name="products" class='form-control'>
+                          <option value=''>Select All</option>
+                            <?php
+                            $sql = "SELECT products FROM `plan` GROUP BY products ORDER BY id"; // Modified to group by 'products' column
+                             $db->sql($sql);
+                            $result = $db->getResult();
+                              foreach ($result as $value) {
+                                  ?>
+                                 <option value='<?= $value['products'] ?>'><?= $value['products'] ?></option>
+                               <?php } ?>
+                             </select>
                         </div>
                     </div>
                     <div  class="box-body table-responsive">
@@ -34,7 +39,7 @@
                                     <th  data-field="name" data-sortable="true">Name</th>
                                     <th  data-field="image" data-sortable="true">Image</th>
                                     <th  data-field="review" data-sortable="true">Review</th>
-                                    <th  data-field="category" data-sortable="true">Category</th>
+                                    <th  data-field="plan_products" data-sortable="true">Plan Name </th>
                                 </tr>
                             </thead>
                         </table>
@@ -56,6 +61,9 @@
     $('#category').on('change', function() {
     $('#users_table').bootstrapTable('refresh');
 });
+$('#products').on('change', function() {
+        $('#users_table').bootstrapTable('refresh');
+    });
   
     function queryParams(p) {
         return {
@@ -63,6 +71,7 @@
             "seller_id": $('#seller_id').val(),
             "community": $('#community').val(),
             "category": $('#category').val(), 
+            "products": $('#products').val(),
             limit: p.limit,
             sort: p.sort,
             order: p.order,

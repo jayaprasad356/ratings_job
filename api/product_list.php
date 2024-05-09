@@ -12,7 +12,15 @@ include_once('../includes/crud.php');
 $db = new Database();
 $db->connect();
 
-$sql = "SELECT * FROM products ORDER BY RAND() LIMIT 1";
+if (empty($_POST['plan_id'])) {
+    $response['success'] = false;
+    $response['message'] = "Plan Id is Empty";
+    print_r(json_encode($response));
+    return false;
+}
+$plan_id = $db->escapeString($_POST['plan_id']);
+
+$sql = "SELECT * FROM products WHERE plan_id = $plan_id ORDER BY RAND() LIMIT 1";
 $db->sql($sql);
 $res= $db->getResult();
 $num = $db->numRows($res);
@@ -23,7 +31,7 @@ if ($num >= 1){
         $temp['name'] = $row['name'];
         $temp['image'] =$row['image'];
         $temp['review'] = $row['review'];
-        $temp['category'] = $row['category'];
+        $temp['plan_id'] = $row['plan_id'];
         $rows[] = $temp;
     }
     $response['success'] = true;

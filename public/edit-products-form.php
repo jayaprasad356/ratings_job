@@ -18,12 +18,12 @@ if (isset($_POST['btnEdit'])) {
     $name = $db->escapeString(($_POST['name']));
     $image = $db->escapeString(($_POST['image']));
     $review = $db->escapeString(($_POST['review']));
-    $category = $db->escapeString(($_POST['category']));
+    $plan_id = $db->escapeString(($_POST['plan_id']));
 	$error = array();
 
 {
 
-$sql_query = "UPDATE products SET name='$name',image='$image',review='$review',category='$category' WHERE id =  $ID";
+$sql_query = "UPDATE products SET name='$name',image='$image',review='$review',plan_id='$plan_id' WHERE id =  $ID";
 $db->sql($sql_query);
 $update_result = $db->getResult();
 if (!empty($update_result)) {
@@ -34,7 +34,7 @@ if (!empty($update_result)) {
 
 // check update result
 if ($update_result == 1) {
-   $error['update_jobs'] = " <section class='content-header'><span class='label label-success'>Category updated Successfully</span></section>";
+   $error['update_jobs'] = " <section class='content-header'><span class='label label-success'>plan_id updated Successfully</span></section>";
 } else {
    $error['update_jobs'] = " <span class='label label-danger'>Failed to Update</span>";
 }
@@ -95,13 +95,21 @@ window.location.href = "products.php";
                                     <input type="text" class="form-control" name="review" value="<?php echo $res[0]['review']?>">
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="exampleInputEmail1">Category</label> <i class="text-danger asterik">*</i>
-                                    <select id='category' name="category" class='form-control'>
-                                        <option value='products' <?php if ($res[0]['category'] == 'products') echo 'selected'; ?>>products</option>
-                                        <option value='companies' <?php if ($res[0]['category'] == 'companies') echo 'selected'; ?>>companies</option>
-                                        <option value='sarees' <?php if ($res[0]['category'] == 'sarees') echo 'selected'; ?>>sarees</option>
+                                    <label for="exampleInputEmail1">Select Plan</label> <i class="text-danger asterik">*</i>
+                                    <select id='plan_id' name="plan_id" class='form-control'>
+                                           <option value="">--Select--</option>
+                                                <?php
+                                                  $sql = "SELECT id, products FROM `plan`";
+                                                $db->sql($sql);
+
+                                                $result = $db->getResult();
+                                                foreach ($result as $value) {
+                                                ?>
+                                                    <option value='<?= $value['id'] ?>' <?= $value['id']==$res[0]['plan_id'] ? 'selected="selected"' : '';?>><?= $value['products'] ?></option>
+                                                    
+                                                <?php } ?>
                                     </select>
-                                </div>
+                                  </div>
                             </div>
                         </div>
                     </div>
