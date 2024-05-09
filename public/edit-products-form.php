@@ -99,6 +99,7 @@ window.location.href = "products.php";
                                     <select id='category' name="category" class='form-control'>
                                         <option value='products' <?php if ($res[0]['category'] == 'products') echo 'selected'; ?>>products</option>
                                         <option value='companies' <?php if ($res[0]['category'] == 'companies') echo 'selected'; ?>>companies</option>
+                                        <option value='sarees' <?php if ($res[0]['category'] == 'sarees') echo 'selected'; ?>>sarees</option>
                                     </select>
                                 </div>
                             </div>

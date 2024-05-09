@@ -97,6 +97,7 @@ if (isset($_POST['btnAdd'])) {
                                     <option value=''>--select--</option>
                                     <option value='products'>products</option>
                                       <option value='companies'>companies</option>
+                                      <option value='sarees'>sarees</option>
                                     </select>
                                 </div>
                             </div>

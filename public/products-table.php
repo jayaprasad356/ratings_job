@@ -18,6 +18,7 @@
                             <option value="">All</option>
                                 <option value="products">products</option>
                                 <option value="companies">companies</option>
+                                <option value="sarees">sarees</option>
                             </select>
                         </div>
                     </div>
