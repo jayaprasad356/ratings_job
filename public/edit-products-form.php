@@ -34,7 +34,7 @@ if (!empty($update_result)) {
 
 // check update result
 if ($update_result == 1) {
-   $error['update_jobs'] = " <section class='content-header'><span class='label label-success'>plan_id updated Successfully</span></section>";
+   $error['update_jobs'] = " <section class='content-header'><span class='label label-success'>Products updated Successfully</span></section>";
 } else {
    $error['update_jobs'] = " <span class='label label-danger'>Failed to Update</span>";
 }
