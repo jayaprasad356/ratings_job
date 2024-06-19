@@ -212,7 +212,7 @@ if ($recharge >= $price) {
         $db->sql($sql_insert_user_plan);
     }
 
-    $sql_insert_user_plan = "INSERT INTO user_plan (user_id,plan_id,joined_date) VALUES ('$user_id','$plan_id','$date')";
+    $sql_insert_user_plan = "INSERT INTO user_plan (user_id,plan_id,joined_date,claim) VALUES ('$user_id','$plan_id','$date',1)";
     $db->sql($sql_insert_user_plan);
 
     $sql_insert_transaction = "INSERT INTO transactions (user_id, amount, datetime, type) VALUES ('$user_id', '$price', '$datetime', 'start_production')";
